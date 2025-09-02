@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divulgador de Links Kiwify</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo i {
+            font-size: 50px;
+            color: #6a11cb;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 25px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px 0 0 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            border-color: #6a11cb;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            border-radius: 0 10px 10px 0;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .status {
+            min-height: 100px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .processing {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(106, 17, 203, 0.2);
+            border-radius: 50%;
+            border-top-color: #6a11cb;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result {
+            display: none;
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2575fc;
+            text-align: center;
+        }
+        
+        .result i {
+            font-size: 40px;
+            color: #2575fc;
+            margin-bottom: 10px;
+        }
+        
+        .countdown {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6a11cb;
+            margin: 15px 0;
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            flex: 1;
+            min-width: 120px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature i {
+            font-size: 24px;
+            color: #6a11cb;
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input {
+                border-radius: 10px;
+                margin-bottom: 10px;
+            }
+            
+            button {
+                border-radius: 10px;
+                padding: 15px;
+            }
+            
+            .features {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-link"></i>
+        </div>
+        
+        <h1>Divulgador de Links Kiwify</h1>
+        <p>Cole seu link do Kiwify abaixo e clique em vender para iniciar a divulgação automatizada</p>
+        
+        <div class="input-group">
+            <input type="text" id="linkInput" placeholder="https://kiwify.com/...">
+            <button id="sellButton">Vender</button>
+        </div>
+        
+        <div class="status">
+            <div class="processing" id="processing">
+                <div class="spinner"></div>
+                <p>Processando...</p>
+            </div>
+            
+            <div class="result" id="result">
+                <i class="fas fa-clock"></i>
+                <h3>Vendas em processamento</h3>
+                <p>Seu link está sendo divulgado em nossa rede</p>
+                <div class="countdown">Aguarde: <span id="countdown">04:00:00</span></div>
+                <p>Você receberá um relatório completo após o processamento</p>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-rocket"></i>
+                <h3>Divulgação Rápida</h3>
+            </div>
+            <div class="feature">
+                <i class="fas fa-chart-line"></i>
+                <h3>Mais Vendas</h3>
+            </div>
+            <div class="feature">
+                <i class="fas fa-users"></i>
+                <h3>Amplo Alcance</h3>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Divulgador Kiwify - Todos os direitos reservados</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const linkInput = document.getElementById('linkInput');
+            const sellButton = document.getElementById('sellButton');
+            const processing = document.getElementById('processing');
+            const result = document.getElementById('result');
+            const countdownElement = document.getElementById('countdown');
+            
+            sellButton.addEventListener('click', function() {
+                const link = linkInput.value.trim();
+                
+                // Validar se o link foi inserido
+                if (!link) {
+                    alert('Por favor, cole seu link da Kiwify!');
+                    return;
+                }
+                
+                // Validar se é um link válido
+                if (!isValidUrl(link)) {
+                    alert('Por favor, insira um link válido!');
+                    return;
+                }
+                
+                // Mostrar processamento
+                processing.style.display = 'flex';
+                sellButton.disabled = true;
+                
+                // Simular processamento por 3 segundos
+                setTimeout(function() {
+                    processing.style.display = 'none';
+                    result.style.display = 'block';
+                    
+                    // Iniciar contagem regressiva de 4 horas
+                    startCountdown(4 * 60 * 60); // 4 horas em segundos
+                }, 3000);
+            });
+            
+            function isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+            
+            function startCountdown(duration) {
+                let timer = duration;
+                let hours, minutes, seconds;
+                
+                const countdownInterval = setInterval(function() {
+                    hours = Math.floor(timer / 3600);
+                    minutes = Math.floor((timer % 3600) / 60);
+                    seconds = Math.floor(timer % 60);
+                    
+                    hours = hours < 10 ? "0" + hours : hours;
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+                    
+                    countdownElement.textContent = hours + ":" + minutes + ":" + seconds;
+                    
+                    if (--timer < 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.textContent = "Processamento concluído!";
+                    }
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
